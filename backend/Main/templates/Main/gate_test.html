@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IntelliGate AI - Manual Gate Test</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #0f172a; color: white; margin: 0; }
+        .card { background: #1e293b; padding: 2rem; border-radius: 12px; width: 380px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        input, button { width: 100%; margin-top: 12px; padding: 10px; border-radius: 6px; box-sizing: border-box; }
+        button { background: #3b82f6; border: none; color: white; font-weight: bold; cursor: pointer; }
+        #output { margin-top: 16px; padding: 12px; border-radius: 6px; font-weight: bold; text-align: center; display: none; }
+        .auth { background: #166534; color: #86efac; }
+        .denied { background: #991b1b; color: #fca5a5; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>IntelliGate AI Tester</h2>
+        <p style="font-size: 0.85rem; color: #94a3b8;">Upload a JPEG up to 1 MB and 2048 pixels to test OCR and the access decision.</p>
+        <input type="file" id="imageInput" accept="image/jpeg">
+        <button onclick="uploadImage()">Verify Vehicle</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        async function uploadImage() {
+            const fileInput = document.getElementById('imageInput');
+            const output = document.getElementById('output');
+            if(!fileInput.files[0]) { alert('Select an image first'); return; }
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            output.style.display = 'block';
+            output.className = '';
+            output.innerText = 'Scanning & Verifying...';
+
+            try {
+                const res = await fetch('/api/v1/verify', {
+                    method: 'POST',
+                    headers: {'X-CSRFToken': document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1]},
+                    body: formData
+                });
+                const data = await res.json();
+                if(data.status === 'complete' && data.is_valid) {
+                    output.className = 'auth';
+                    output.innerText = `AUTHORIZED: Plate ${data.plate_number}`;
+                } else {
+                    output.className = 'denied';
+                    output.innerText = `${data.status === 'complete' ? 'NOT APPROVED' : data.status.toUpperCase()}: Plate ${data.plate_number || 'Unrecognized'}`;
+                }
+            } catch(err) {
+                output.className = 'denied';
+                output.innerText = 'Server Error';
+            }
+        }
+    </script>
+</body>
+</html>

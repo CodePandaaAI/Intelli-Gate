@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">IntelliGate</string>
+    <string name="scan_hint">Photograph the plate.</string>
+    <string name="scan_number_plate">Scan number plate</string>
+    <string name="scan_another">Scan another vehicle</string>
+    <string name="retry_check">Retry check</string>
+    <string name="retake_photo">Take a new photo</string>
+    <string name="cancel">Cancel</string>
+    <string name="preparing_photo">Preparing photo…</string>
+    <string name="sending_photo">Sending photo…</string>
+    <string name="checking_vehicle">Checking vehicle…</string>
+    <string name="approved">Approved</string>
+    <string name="not_approved">Not approved</string>
+    <string name="unreadable_plate">Couldn\'t read the plate</string>
+    <string name="retake_hint">Move closer and take another photo.</string>
+    <string name="has_pass">Pass on record</string>
+    <string name="no_pass">No pass on record</string>
+    <string name="check_failed">Couldn\'t finish the check</string>
+</resources>

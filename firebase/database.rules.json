@@ -1,0 +1,33 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "scan_images": {
+      "$uid": {
+        "$requestId": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null && auth.uid == $uid && (!data.exists() || !newData.exists())",
+          ".validate": "newData.hasChildren(['image', 'created_at'])",
+          "image": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1333336"
+          },
+          "created_at": {
+            ".validate": "newData.isNumber() && newData.val() <= now && newData.val() >= now - 60000"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "scan_results": {
+      "$uid": {
+        "$requestId": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null && auth.uid == $uid && !newData.exists()"
+        }
+      }
+    },
+    "vehicles": {}
+  }
+}
